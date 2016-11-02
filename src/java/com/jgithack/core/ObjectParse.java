@@ -38,7 +38,7 @@ public class ObjectParse {
      * @return              加载后的解析方法对象（该对象可获取解析结果）
      * @throws Exception    加载失败则抛出异常
      */
-    public static ObjectParse load(String objectPath) throws Exception {
+    public static ObjectParse load(String objectPath) throws IOException {
         ObjectParse objectParse = new ObjectParse(objectPath);
         objectParse.parse();
         return objectParse;

@@ -15,12 +15,42 @@ import java.io.Writer;
  * @version $Id: LogUtils.java, V0.1 2016-10-29 20:02:00, jawangwen@qq.com $
  */
 public class LogUtils {
-    public static final int     DEBUG   = 0;
-    public static final int     INFO    = 1;
-    public static final int     WARNING = 2;
-    public static final int     ERROR   = 3;
+    public static final int       DEBUG   = 0;
+    public static final int       INFO    = 1;
+    public static final int       WARNING = 2;
+    public static final int       ERROR   = 3;
 
-    private static volatile int level   = DEBUG;
+    private static volatile int   level   = DEBUG;
+
+    private static volatile Print print   = new Print() {
+                                              @Override
+                                              public void toOut(String log) {
+                                                  System.out.println(log);
+                                              }
+
+                                              @Override
+                                              public void toErr(String log) {
+                                                  System.err.println(log);
+                                              }
+                                          };
+
+    /**
+     * 打印方案
+     * 
+     * @author Albert Wang
+     * @version $Id: LogUtils.java, V0.1 Nov 2, 2016 12:30:54 AM jawangwen@qq.com $
+     */
+    public static interface Print {
+        /**
+         * 打印一般信息
+         */
+        public void toOut(String log);
+
+        /**
+         * 打印错误信息
+         */
+        public void toErr(String log);
+    }
 
     /**
      * 以slf4j的格式来格式化日志输出
@@ -45,7 +75,7 @@ public class LogUtils {
      */
     public static void debug(String message, Object... arguments) {
         if (level <= DEBUG) {
-            System.out.println(formatMessage(message, arguments));
+            print.toOut(formatMessage(message, arguments));
         }
     }
 
@@ -58,7 +88,7 @@ public class LogUtils {
      */
     public static void info(String message, Object... arguments) {
         if (level <= INFO) {
-            System.out.println(formatMessage(message, arguments));
+            print.toOut(formatMessage(message, arguments));
         }
     }
 
@@ -71,7 +101,7 @@ public class LogUtils {
      */
     public static void warn(String message, Object... arguments) {
         if (level <= WARNING) {
-            System.err.println(formatMessage(message, arguments));
+            print.toErr(formatMessage(message, arguments));
         }
     }
 
@@ -83,7 +113,7 @@ public class LogUtils {
      * @param arguments
      */
     public static void error(String message, Object... arguments) {
-        System.err.println(formatMessage(message, arguments));
+        print.toErr(formatMessage(message, arguments));
     }
 
     /**
@@ -96,7 +126,7 @@ public class LogUtils {
      */
     public static void warn(Throwable e, String message, Object... arguments) {
         if (level <= WARNING) {
-            System.err.println(formatMessage(message, arguments) + getStackTrace(e));
+            print.toErr(formatMessage(message, arguments) + getStackTrace(e));
         }
 
     }
@@ -110,8 +140,8 @@ public class LogUtils {
      * @param arguments
      */
     public static void error(Throwable e, String message, Object... arguments) {
-        System.err.println(formatMessage(message, arguments));
-        System.err.println(getStackTrace(e));
+        print.toErr(formatMessage(message, arguments));
+        print.toErr(getStackTrace(e));
     }
 
     /**
@@ -128,5 +158,14 @@ public class LogUtils {
         PrintWriter pw = new PrintWriter(sw);
         throwable.printStackTrace(pw);
         return sw.toString();
+    }
+
+    /**
+     * Setter method for property <tt>print</tt>.
+     * 
+     * @param print value to be assigned to property print
+     */
+    public static void setPrint(Print print) {
+        LogUtils.print = print;
     }
 }

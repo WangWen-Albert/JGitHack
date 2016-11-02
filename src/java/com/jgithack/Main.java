@@ -4,11 +4,12 @@
  */
 package com.jgithack;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.awt.EventQueue;
 
+import com.jgithack.hack.GitHack;
 import com.jgithack.lang.StringUtil;
 import com.jgithack.log.LogUtils;
+import com.jgithack.ui.HomeFrame;
 
 /**
  * Main
@@ -28,14 +29,19 @@ public class Main {
         String rootUrl = args.length > 2 ? args[1] : null;
         try {
             if (StringUtil.isBlank(rootUrl)) {
-                LogUtils.warn("请输入链接：");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                rootUrl = reader.readLine();
+                EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        HomeFrame homeFrame = new HomeFrame();
+                        homeFrame.setLocationRelativeTo(null);
+                        homeFrame.setVisible(true);
+                    }
+                });
+            } else {
+                GitHack hack = new GitHack().withRootUrl(rootUrl).nativeFirst(true).skipError(true)
+                    .build();
+                hack.checkout();
+                LogUtils.info("Complete!");
             }
-            GitHack hack = new GitHack().withRootUrl(rootUrl).nativeFirst(true).skipError(true)
-                .build();
-            hack.checkout();
-            LogUtils.info("Complete!");
         } catch (Exception exception) {
             LogUtils.error(exception, "GitHack run failed!");
         }

@@ -6,6 +6,7 @@ package com.jgithack;
 
 import org.testng.annotations.Test;
 
+import com.jgithack.hack.GitHack;
 import com.jgithack.log.LogUtils;
 
 /**

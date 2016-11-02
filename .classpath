@@ -6,5 +6,6 @@
 	<classpathentry excluding="**/*.java" kind="src" path="src/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/org/testng/testng/6.8.8/testng-6.8.8.jar" sourcepath="M2_REPO/org/testng/testng/6.8.8/testng-6.8.8-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/Albert/Downloads/Stegsolve.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
